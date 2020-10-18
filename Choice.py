@@ -3,7 +3,8 @@ import sqlite3
 from tkcalendar import *
 
 def grab_date():
-    my_label_date.config(text=cal.get_date())
+    date_list = []
+    date_list.append(str(input(text=cal.get_date())))
 
 
 def choice():

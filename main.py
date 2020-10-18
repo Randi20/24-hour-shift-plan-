@@ -2,6 +2,7 @@ from tkinter import *
 import sqlite3
 from Choice import *
 from Submit import *
+from Editor import *
 root = Tk()
 root.title("Vagt plans app")
 root.geometry("400x600")

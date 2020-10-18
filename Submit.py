@@ -1,6 +1,23 @@
 from tkinter import *
 import sqlite3
+from Editor import *
 
+
+
+
+def delete():
+    # Create a database or connect to ons
+    conn = sqlite3.connect('vagt_plan_app.db')
+    # Create cursor
+    c = conn.cursor()
+
+    # Delete a record
+    c.execute("DELETE from users WHERE oid= " + delete_box.get())
+
+    # Commit changes
+    conn.commit()
+    # Close Connection
+    conn.close()
 
 def show():
     # Create a database or connect to ons
@@ -76,6 +93,7 @@ def submit():
     global f_name
     global l_name
     global init
+    global delete_box
 
     # Create Text Box Labels
     f_name_label = Label(user, text="For navn")
@@ -84,6 +102,8 @@ def submit():
     l_name_label.grid(row=1, column=0)
     init_label = Label(user, text="Initialer")
     init_label.grid(row=2, column=0)
+    delete_box_label = Label(user, text="Vælg ID nummer:")
+    delete_box_label.grid(row=7, column=0)
 
     # Create Text Boxes
     f_name = Entry(user, width=30)
@@ -92,13 +112,15 @@ def submit():
     l_name.grid(row=1, column=1)
     init = Entry(user, width=30)
     init.grid(row=2, column=1)
+    delete_box = Entry(user, width=30)
+    delete_box.grid(row=7, column=1)
 
 
 
 
     # Create a save button
     save_btn = Button(user, text="Gem", command=save)
-    save_btn.grid(row=6, column=0, columnspan=2, pady=10, padx=10, ipadx=145)
+    save_btn.grid(row=5, column=0, columnspan=2, pady=10, padx=10, ipadx=145)
 
     # Clear The Text Boxes
     f_name.delete(0, END)
@@ -107,7 +129,15 @@ def submit():
 
     # Create a show user button
     show_btn = Button(user, text="Vis bruger", command=show)
-    show_btn.grid(row=7, column=0, columnspan=2, pady=10, padx=10, ipadx=135)
+    show_btn.grid(row=6, column=0, columnspan=2, pady=10, padx=10, ipadx=135)
+
+    # Create a delete user button
+    show_btn = Button(user, text="Slet bruger", command=delete)
+    show_btn.grid(row=8, column=0, columnspan=2, pady=10, padx=10, ipadx=135)
+
+    # Create a edit user button
+    edit_btn = Button(user, text="Rediger bruger", command=edit)
+    edit_btn.grid(row=9, column=0, columnspan=2, pady=10, padx=10, ipadx=135)
 
     # Commit changes
     conn.commit()
