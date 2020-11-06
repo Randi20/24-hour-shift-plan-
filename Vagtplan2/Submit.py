@@ -1,6 +1,6 @@
 from tkinter import *
 import sqlite3
-from Editor import *
+from Vagtplan2.Editor import *
 
 
 

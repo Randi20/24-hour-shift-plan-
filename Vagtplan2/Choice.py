@@ -1,7 +1,7 @@
 from tkinter import *
 import sqlite3
 from tkcalendar import *
-from Select_user import *
+from Vagtplan2.Select_user import *
 
 
 

@@ -1,7 +1,7 @@
 from tkinter import *
 import sqlite3
 from tkinter import ttk
-import Choice
+import Vagtplan2.Choice as Choice
 
 
 
