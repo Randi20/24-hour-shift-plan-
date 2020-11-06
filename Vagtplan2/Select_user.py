@@ -1,54 +1,68 @@
-from tkinter import *
-import sqlite3
+import tkinter as tk
 from tkinter import ttk
-import Vagtplan2.Choice as Choice
+from tkcalendar import *
+# import Vagtplan2.Choice as Choice
+import Vagtplan2.database as db
 
+class Helper:
+    pass
 
+def select_users():
+    s_user = tk.Tk()
+    s_user.title("Vagt plans app")
+    s_user.geometry("400x200")
 
-class Select_user:
+    f_name_label = tk.Label(s_user, text="Vælg bruger")
+    f_name_label.pack(pady=10)
 
+    combo = ttk.Combobox(s_user, width=50, height=20)
+    combo.pack(pady=10)
+    combo['values'] = db.find_users()
 
-    def sel_user(self):
-        self.user_init = self.combo.get()
-        return self.user_init
+    def onclick():
+        user = combo.get()
+        s_user.destroy()
+        choose_shift(user)
 
-    def find_user(self):
-        # Create a database or connect to ons
-        conn = Choice.sqlite3.connect('vagt_plan_app.db')
-        # Create cursor
-        c = conn.cursor()
+    # Create a select user button
+    s_btn = tk.Button(s_user, 
+                text="Vælg bruger", 
+                command=onclick)
+    s_btn.pack(pady=10)
 
+def choose_shift(user):
+    wishes = tk.Tk()
+    wishes.title("Vagt ønsker")
+    wishes.geometry("600x600")
 
-        # Query the database
-        c.execute("SELECT initialer FROM users")
-        self.userList = []
+    msg = f"Hej {user}: Marker de dage du ønsker at have vagt!"
+    info_label = tk.Label(wishes, text=msg)
+    info_label.pack(pady=(10, 0))
 
-        for init in c.fetchall():
-            self.userList.append(init[0])
+    cal = Calendar(wishes, 
+            selectmode="day", year=2020, month=10, day=1)
+    cal.pack(pady=20, fill="both")
 
-        return self.userList
+    helper = Helper()
+    choices = set()
+    def add_choice():
+        choices.add(cal.get_date())
+        helper.dates_label.config(text=str(choices))
 
+    my_button = tk.Button(wishes, 
+            text="Tilfør dato:", 
+            command=add_choice
+            )
+    my_button.pack(pady=40)
 
+    def save_dates():
+        db.save_shifts(user, choices)
 
+    save_date_button = tk.Button(wishes, 
+            text="Gem valgte dage", 
+            command=save_dates)
+    save_date_button.pack(pady=20)
 
-        # Commit changes
-        conn.commit()
-        # Close Connection
-        conn.close()
+    helper.dates_label = tk.Label(wishes, text="")
+    helper.dates_label.pack(pady=20)
 
-
-    def __init__(self):
-        self.s_user = Choice.Tk()
-        self.s_user.title("Vagt plans app")
-        self.s_user.geometry("400x200")
-
-        self.f_name_label = Choice.Label(self.s_user, text="Vælg bruger")
-        self.f_name_label.pack(pady=10)
-
-        self.combo = Choice.ttk.Combobox(self.s_user, width=50, height=20)
-        self.combo.pack(pady=10)
-        self.combo['values'] = self.find_user()
-
-        # Create a select user button
-        self.s_btn = Choice.Button(self.s_user, text="Vælg bruger", command=Choice.Choice)
-        self.s_btn.pack(pady=10)

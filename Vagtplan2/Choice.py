@@ -3,12 +3,7 @@ import sqlite3
 from tkcalendar import *
 from Vagtplan2.Select_user import *
 
-
-
-
 class Choice:
-
-
 
     def show_date(self):
         self.choice.append(self.cal.get_date())
