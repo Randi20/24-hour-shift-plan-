@@ -3,6 +3,8 @@ from tkinter import ttk
 import sqlite3
 from tkcalendar import *
 
+from datetime import datetime
+
 root = tk.Tk()
 root.title("Vagt plans app")
 root.geometry("800x700")
@@ -15,11 +17,14 @@ frame.grid(row=8, column=0, padx=20, pady=70)
 
 
 # Create calendar
-cal = Calendar(frame, selectmode="day", year=2021, month=1, day=1)
+cal = Calendar(frame, selectmode="day",
+               locale="da_DK",
+               year=2021, month=1, day=1)
 cal.grid(row=8, column=0, pady=20)
+cal.tag_config('selection', foreground='green')
 
 
-# Create Text Box Labels
+# Create Text Box Labelsd
 vellcome_label = tk.Label(root, text="Velkommen til Vagt plan lægning af døgnvagter på 7631")
 vellcome_label.grid(row=0, column=0, pady=(10))
 
@@ -52,9 +57,20 @@ def mound():
     #user_s = tk.Label(root, text="Vælg vagt periode: ")
     #user_s.grid(row=6, column=0, pady=10)
 
-def show_date():
-    day = cal.get_date()
-    dates_listbox.insert(0, day)
+def show_date(event=None):
+    print(event)
+    day = cal.selection_get()
+
+    if cal.get_calevents(date=day):
+        cal.calevent_remove(date=day)
+    else:
+        cal.calevent_create(day, "Hej", "selection")
+
+    print("---- 8< ----")
+    for calevid in cal.get_calevents(tag="selection"):
+        print(cal.calevent_cget(calevid, "date"))
+    print("---- 8< ----")
+    # dates_listbox.insert(0, day)
 
 # tjeck your dates
 def save_date():
@@ -62,8 +78,9 @@ def save_date():
     root2.title("Ønskede dage!")
     root2.geometry("600x600")
 
-
-    choice.append(dates_listbox.get("0","end"))
+    choice = [ ]
+    for calevid in cal.get_calevents():
+        choice.append(cal.calevent_cget(calevid, "date"))
 
     def save():
         pass
@@ -106,6 +123,7 @@ combo_period = ttk.Combobox(root, width=20, height=20, value=options_mound)
 combo_period.current(1)
 combo_period.grid(row=3, column=1, pady=10)
 
+cal.bind("<<CalendarSelected>>", show_date)
 
 bnt_select = tk.Button(root, text="Vælg", command=user_c).grid(row=1, column=3, pady=10)
 bnt_mound = tk.Button(root, text="Vælg", command=mound).grid(row=3, column=3, pady=10)
