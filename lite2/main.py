@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 import sqlite3
 from tkinter.filedialog import asksaveasfile
+import pytest
 
 from tkcalendar import *
 
@@ -78,9 +79,10 @@ def save_date():
         data['User'] = a
         data['Mound'] = b
         data['Dates'] = c
-        file = open("Wiches.json", "a")
-        json.dump(data, file)
-        file.close()
+        with open("Wiches.json", "a") as file:
+            json.dump(data, file)
+            print("", file=file)
+
 
 
     def writeToJSONFile(path, fileName, data):
